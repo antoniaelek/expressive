@@ -19,9 +19,9 @@ namespace Expressive.Expressions.Binary.Multiplicative
         /// <inheritdoc />
         protected override object EvaluateImpl(object lhsResult, IExpression rightHandSide, IDictionary<string, object> variables) =>
             EvaluateAggregates(lhsResult, rightHandSide, variables, (l, r) => 
-                l is null || r is null || IsReal(l) || IsReal(r)
+                l is null || r is null //|| IsReal(l) || IsReal(r)
                     ? Numbers.Divide(l, r)
-                    : Numbers.Divide(Convert.ToDouble(l), r));
+                    : Numbers.Divide(Convert.ToDecimal(l), r));
 
         #endregion
 

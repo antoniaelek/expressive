@@ -1,5 +1,4 @@
 ﻿using System;
-using Expressive.Exceptions;
 using Expressive.Expressions;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,17 +40,17 @@ namespace Expressive.Functions
 
             if (expectedCount == 0 && (parameters.Any() || parameters.Length != expectedCount))
             {
-                throw new ParameterCountMismatchException($"{this.Name}() does not take any arguments");
+                throw new Exception($"{this.Name}() does not take any arguments");
             }
 
             if (expectedCount > 0 && (!parameters.Any() || parameters.Length != expectedCount))
             {
-                throw new ParameterCountMismatchException($"{this.Name}() takes only {expectedCount} argument(s)");
+                throw new Exception($"{this.Name}() takes only {expectedCount} argument(s)");
             }
 
             if (minimumCount > 0 && (!parameters.Any() || parameters.Length < minimumCount))
             {
-                throw new ParameterCountMismatchException($"{this.Name}() expects at least {minimumCount} argument(s)");
+                throw new Exception($"{this.Name}() expects at least {minimumCount} argument(s)");
             }
         }
     }

@@ -1,4 +1,3 @@
-using Expressive.Exceptions;
 using Expressive.Expressions;
 using Expressive.Operators;
 using System;
@@ -55,7 +54,7 @@ namespace Expressive
         {
             if (string.IsNullOrWhiteSpace(expression))
             {
-                throw new ExpressiveException("An Expression cannot be empty.");
+                throw new Exception("An Expression cannot be empty.");
             }
 
             var tokens = this.tokeniser.Tokenise(expression);
@@ -265,7 +264,7 @@ namespace Expressive
                         }
                         else
                         {
-                            throw new UnrecognisedTokenException(dateToken);
+                            throw new Exception("Unrecognised token '" + dateToken + "'");
                         }
                     }
 
@@ -283,7 +282,7 @@ namespace Expressive
                 {
                     if (!isWithinFunction)
                     {
-                        throw new ExpressiveException($"Unexpected token '{currentToken}'");
+                        throw new Exception($"Unexpected token '{currentToken}'");
                     }
                     tokens.Dequeue();
                 }
@@ -291,7 +290,7 @@ namespace Expressive
                 {
                     tokens.Dequeue();
 
-                    throw new UnrecognisedTokenException(currentToken.CurrentToken);
+                    throw new Exception("Unrecognised token '" + currentToken.CurrentToken + "'");
                 }
 
                 previousToken = currentToken;
@@ -358,10 +357,10 @@ namespace Expressive
             {
                 if (isWithinFunction)
                 {
-                    throw new MissingTokenException("Missing token, expecting ','.", ',');
+                    throw new Exception("Missing token, expecting ','.");
                 }
                 
-                throw new ExpressiveException($"Unexpected token '{token.CurrentToken}' at index {token.StartIndex}");
+                throw new Exception($"Unexpected token '{token.CurrentToken}' at index {token.StartIndex}");
             }
         }
 

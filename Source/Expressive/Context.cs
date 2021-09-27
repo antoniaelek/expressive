@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Expressive.Exceptions;
 using Expressive.Expressions;
 using Expressive.Functions;
 using Expressive.Functions.Conversion;
@@ -277,7 +276,7 @@ namespace Expressive
             {
                 if (!force && this.registeredOperators.ContainsKey(tag))
                 {
-                    throw new OperatorNameAlreadyRegisteredException(tag);
+                    throw new Exception($"An operator has already been registered '{tag}'");
                 }
 
                 this.registeredOperators[tag] = op;
@@ -334,7 +333,7 @@ namespace Expressive
         {
             if (!force && this.registeredFunctions.ContainsKey(functionName))
             {
-                throw new FunctionNameAlreadyRegisteredException(functionName);
+                throw new Exception($"A function {functionName} has already been registered.");
             }
         }
 

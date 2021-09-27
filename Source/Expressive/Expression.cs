@@ -18,7 +18,6 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
-using Expressive.Exceptions;
 using Expressive.Expressions;
 using Expressive.Functions;
 using Expressive.Operators;
@@ -91,50 +90,32 @@ namespace Expressive
         /// <summary>
         /// Evaluates the expression using the supplied <paramref name="variables"/> and returns the result.
         /// </summary>
-        /// <exception cref="Exceptions.ExpressiveException">Thrown when there is a break in the evaluation process, check the InnerException for further information.</exception>
+        /// <exception cref="Exception">Thrown when there is a break in the evaluation process, check the InnerException for further information.</exception>
         /// <param name="variables">The variables to be used in the evaluation.</param>
         /// <returns>The result of the evaluation.</returns>
         public object Evaluate(IDictionary<string, object> variables = null)
         {
-            try
-            {
-                this.CompileExpression();
+            this.CompileExpression();
 
-                return this.compiledExpression?.Evaluate(ApplyStringComparerSettings(variables, this.context.ParsingStringComparer));
-            }
-            catch (Exception ex)
-            {
-                throw new ExpressiveException(ex);
-            }
+            return this.compiledExpression?.Evaluate(ApplyStringComparerSettings(variables, this.context.ParsingStringComparer));
         }
 
         /// <summary>
         /// Evaluates the expression using the supplied <paramref name="variables"/> and returns the result.
         /// </summary>
-        /// <exception cref="Exceptions.ExpressiveException">Thrown when there is a break in the evaluation process, check the InnerException for further information.</exception>
+        /// <exception cref="Exception">Thrown when there is a break in the evaluation process, check the InnerException for further information.</exception>
         /// <param name="variables">The variables to be used in the evaluation.</param>
         /// <returns>The result of the evaluation.</returns>
         public T Evaluate<T>(IDictionary<string, object> variables = null)
         {
-            try
-            {
-                return (T)this.Evaluate(variables);
-            }
-            catch (ExpressiveException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new ExpressiveException(ex);
-            }
+            return (T)this.Evaluate(variables);
         }
 
         /// <summary>
         /// Evaluates the expression using the supplied <paramref name="variableProvider"/> and returns the result.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="variableProvider"/> is null.</exception>
-        /// <exception cref="Exceptions.ExpressiveException">Thrown when there is a break in the evaluation process, check the InnerException for further information.</exception>
+        /// <exception cref="Exception">Thrown when there is a break in the evaluation process, check the InnerException for further information.</exception>
         /// <param name="variableProvider">The <see cref="IVariableProvider"/> implementation to provide variable values during evaluation.</param>
         /// <returns>The result of the evaluation.</returns>
         public object Evaluate(IVariableProvider variableProvider)
@@ -151,7 +132,7 @@ namespace Expressive
         /// Evaluates the expression using the supplied <paramref name="variableProvider"/> and returns the result.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="variableProvider"/> is null.</exception>
-        /// <exception cref="Exceptions.ExpressiveException">Thrown when there is a break in the evaluation process, check the InnerException for further information.</exception>
+        /// <exception cref="Exception">Thrown when there is a break in the evaluation process, check the InnerException for further information.</exception>
         /// <param name="variableProvider">The <see cref="IVariableProvider"/> implementation to provide variable values during evaluation.</param>
         /// <returns>The result of the evaluation.</returns>
         public T Evaluate<T>(IVariableProvider variableProvider)
@@ -161,18 +142,7 @@ namespace Expressive
                 throw new ArgumentNullException(nameof(variableProvider));
             }
 
-            try
-            {
-                return (T)this.Evaluate(variableProvider);
-            }
-            catch (ExpressiveException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new ExpressiveException(ex);
-            }
+            return (T)this.Evaluate(variableProvider);
         }
 
         /// <summary>
@@ -186,12 +156,14 @@ namespace Expressive
             this.EvaluateAsync<object>(callback, variables);
         }
 
+
         /// <summary>
         /// Evaluates the expression using the supplied variables asynchronously and returns the result via the callback.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException">Thrown if the callback is not supplied.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if the callback is not supplied.</exception>
         /// <param name="callback">Provides the result once the evaluation has completed.</param>
         /// <param name="variables">The variables to be used in the evaluation.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         public void EvaluateAsync<T>(Action<string, T> callback, IDictionary<string, object> variables = null)
         {
             if (callback is null)
@@ -212,7 +184,7 @@ namespace Expressive
                 {
                     result = this.Evaluate<T>(variables);
                 }
-                catch (ExpressiveException ex)
+                catch (Exception ex)
                 {
                     message = ex.Message;
                 }
@@ -226,16 +198,16 @@ namespace Expressive
         /// </summary>
         /// <param name="functionName">The name of the function (NOTE this is also the tag that will be used to extract the function from an expression).</param>
         /// <param name="function">The method of evaluating the function.</param>
-        /// <exception cref="Exceptions.FunctionNameAlreadyRegisteredException">Thrown when the name supplied has already been registered.</exception>
-        public void RegisterFunction(string functionName, Func<IExpression[], IDictionary<string, object>, object> function) => 
+        /// <exception cref="Exception">Thrown when the name supplied has already been registered.</exception>
+        public void RegisterFunction(string functionName, Func<IExpression[], IDictionary<string, object>, object> function) =>
             this.context.RegisterFunction(functionName, function);
 
         /// <summary>
         /// Registers a custom function inheriting from <see cref="IFunction"/> for use in evaluating an expression.
         /// </summary>
         /// <param name="function">The <see cref="IFunction"/> implementation.</param>
-        /// <exception cref="Exceptions.FunctionNameAlreadyRegisteredException">Thrown when the name supplied has already been registered.</exception>
-        public void RegisterFunction(IFunction function) => 
+        /// <exception cref="Exception">Thrown when the name supplied has already been registered.</exception>
+        public void RegisterFunction(IFunction function) =>
             this.context.RegisterFunction(function);
 
         /// <summary>
@@ -247,14 +219,14 @@ namespace Expressive
         /// Please if you are calling this with your own <see cref="IOperator"/> implementations do seriously consider raising an issue to add it in to the general framework:
         /// https://github.com/bijington/expressive
         /// </remarks>
-        public void RegisterOperator(IOperator op, bool force = false) => 
+        public void RegisterOperator(IOperator op, bool force = false) =>
             this.context.RegisterOperator(op, force);
 
         /// <summary>
         /// Removes the function from the available set of functions when evaluating. 
         /// </summary>
         /// <param name="functionName">The name of the function to remove.</param>
-        public void UnregisterFunction(string functionName) => 
+        public void UnregisterFunction(string functionName) =>
             this.context.UnregisterFunction(functionName);
 
         /// <summary>

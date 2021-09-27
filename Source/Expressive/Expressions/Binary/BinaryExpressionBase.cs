@@ -1,5 +1,4 @@
-﻿using Expressive.Exceptions;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,12 +46,12 @@ namespace Expressive.Expressions.Binary
         {
             if (this.leftHandSide is null)
             {
-                throw new MissingParticipantException("The left hand side of the operation is missing.");
+                throw new Exception("The left hand side of the operation is missing.");
             }
 
             if (this.rightHandSide is null)
             {
-                throw new MissingParticipantException("The right hand side of the operation is missing.");
+                throw new Exception("The right hand side of the operation is missing.");
             }
 
             // We will evaluate the left hand side but hold off on the right hand side as it may not be necessary

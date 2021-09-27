@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Expressive.Exceptions;
+using System;
 
 namespace Expressive.Tokenisation
 {
@@ -31,7 +31,7 @@ namespace Expressive.Tokenisation
 
             if (string.IsNullOrWhiteSpace(extracted))
             {
-                throw new MissingTokenException($"Missing closing token '{this.endingCharacter}'", this.endingCharacter);
+                throw new Exception($"Missing closing token '{this.endingCharacter}'");
             }
 
             return new Token(extracted, currentIndex);
